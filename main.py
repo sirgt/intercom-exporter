@@ -30,13 +30,16 @@ def main(headers, page_url, per_page):
             for item in value:
                 for k, v in item.items():
                     if k == 'id':
-                        conversation_details(head, page_url, v)
+                        #conversation_details(head, page_url, v)
 
         if isinstance(value, dict):
             for k, v in value.items():
                 if k == 'next':
                     starting_after = "&starting_after=" + v['starting_after']
                     print(page_url + per_page + starting_after)
+
+        if isinstance(value, str):
+            print(f'Value is a string: {value}')
 
 
 if __name__ == '__main__':
