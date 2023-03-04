@@ -13,17 +13,6 @@ conv_url = "https://api.intercom.io/conversations"
 pages = "?per_page=15"
 
 
-def next_page(headers, page_url, per_page):
-    url = page_url + per_page
-    response = requests.get(url, headers=headers).json()
-    for key, value in response.items():
-        if isinstance(value, dict):
-            for k, v in value.items():
-                if k == 'next':
-                    starting_after = "&starting_after=" + v['starting_after']
-                    return page_url + per_page + starting_after
-
-
 def conversation_details(headers, page_url, conv_id):
     url = page_url + conv_id
     response = requests.get(url, headers=headers)
