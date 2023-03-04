@@ -1,5 +1,6 @@
 import requests
 import os
+import json
 from pprint import pprint
 
 intercom_bearer = os.environ.get('INTERCOM_EXPORTER')
@@ -14,9 +15,11 @@ pages = "?per_page=15"
 
 
 def conversation_details(headers, page_url, conv_id):
-    url = page_url + conv_id
-    response = requests.get(url, headers=headers)
-    pprint(response.text)
+    url = page_url + "/" + conv_id
+    file_name = os.path.join("./conversations/", conv_id+".json")
+    response = requests.get(url, headers=headers).json()
+    with open(file_name, "w") as outfile:
+        json.dump(response, outfile)
 
 
 def main(headers, page_url, per_page):
@@ -27,8 +30,7 @@ def main(headers, page_url, per_page):
             for item in value:
                 for k, v in item.items():
                     if k == 'id':
-                        print(v)
-                        # conversation_details(head,page_url, v)
+                        conversation_details(head, page_url, v)
 
         if isinstance(value, dict):
             for k, v in value.items():
@@ -38,7 +40,5 @@ def main(headers, page_url, per_page):
 
 
 if __name__ == '__main__':
-    main()
-
-
+    main(head, conv_url, pages)
 
