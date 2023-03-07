@@ -2,8 +2,8 @@ import requests
 import os
 import json
 
-
 intercom_bearer = os.environ.get('INTERCOM_EXPORTER')
+
 head = {
         "accept": "application/json",
         "Intercom-Version": "2.8",
@@ -14,23 +14,15 @@ conv_url = "https://api.intercom.io/conversations"
 pages = "?per_page=150"
 
 
-def pages_num(headers, page_url, per_page):
-    url = page_url + per_page
-    response = requests.get(url, headers=headers).json()
-
-    for key, value in response.items():
-        if isinstance(value, dict):
-            for k, v in value.items():
-                if k == 'total_pages':
-                    print("Total pages: " + str(v))
-
-
 def conversation_details(headers, page_url, conv_id):
     url = page_url + "/" + conv_id
     file_name = os.path.join("./conversations/", conv_id+".json")
-    response = requests.get(url, headers=headers).json()
-    with open(file_name, "w") as outfile:
-        json.dump(response, outfile)
+    if os.path.isfile(file_name):
+        print("Conversation " + file_name + " exists.")
+    else:
+        response = requests.get(url, headers=headers).json()
+        with open(file_name, "w") as outfile:
+            json.dump(response, outfile)
 
 
 def main(headers, page_url, per_page):
