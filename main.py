@@ -1,7 +1,7 @@
 import requests
 import os
 import json
-from pprint import pprint
+
 
 intercom_bearer = os.environ.get('INTERCOM_EXPORTER')
 head = {
@@ -12,6 +12,17 @@ head = {
 
 conv_url = "https://api.intercom.io/conversations"
 pages = "?per_page=150"
+
+
+def pages_num(headers, page_url, per_page):
+    url = page_url + per_page
+    response = requests.get(url, headers=headers).json()
+
+    for key, value in response.items():
+        if isinstance(value, dict):
+            for k, v in value.items():
+                if k == 'total_pages':
+                    print("Total pages: " + str(v))
 
 
 def conversation_details(headers, page_url, conv_id):
@@ -52,5 +63,7 @@ def main(headers, page_url, per_page):
                             conversation_details(head, page_url, v)
 
 
+# pages_num(head, conv_url ,pages)
 if __name__ == '__main__':
     main(head, conv_url, pages)
+
