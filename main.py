@@ -55,7 +55,6 @@ def main(headers, page_url, per_page):
                             conversation_details(head, page_url, v)
 
 
-# pages_num(head, conv_url ,pages)
 if __name__ == '__main__':
     main(head, conv_url, pages)
 
